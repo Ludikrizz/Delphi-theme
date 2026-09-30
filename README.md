@@ -8,7 +8,13 @@ Indigo blue dark and light color themes for VS Code. The dark theme uses the del
 
 ## Install
 
-The theme is not on the Marketplace yet. Install it from a `.vsix` file:
+Install it from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ludikrizz.delphi-theme):
+
+1. Open the Extensions view (`Ctrl+Shift+X`).
+2. Search for **Delφ Theme**.
+3. Select **Install**.
+
+To install it from the source instead:
 
 1. Clone this repo.
 2. Run `npm run package`. This makes `delphi-theme-0.1.0.vsix`.

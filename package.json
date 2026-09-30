@@ -9,6 +9,10 @@
 		"type": "git",
 		"url": "https://github.com/Ludikrizz/Delphi-theme.git"
 	},
+	"homepage": "https://github.com/Ludikrizz/Delphi-theme#readme",
+	"bugs": {
+		"url": "https://github.com/Ludikrizz/Delphi-theme/issues"
+	},
 	"engines": {
 		"vscode": "^1.70.0"
 	},
