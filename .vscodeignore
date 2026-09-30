@@ -1,0 +1,7 @@
+.git/**
+.gitignore
+.vscode/**
+build.mjs
+palette.json
+*.vsix
+images/**

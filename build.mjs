@@ -1,0 +1,235 @@
+// Builds themes/delphi-dark.json and themes/delphi-light.json from palette.json.
+// palette.json is the "Copy all colors as JSON" export of the Indigo Swatchbook page: { dark: {...}, light: {...} }.
+import { readFileSync, writeFileSync } from "node:fs";
+
+const palette = JSON.parse(readFileSync(new URL("./palette.json", import.meta.url), "utf8"));
+const alpha = (hex, a) => hex + a; // "#rrggbb" + "aa"
+
+function workbench(p, dark) {
+	return {
+		focusBorder: p.accent,
+		foreground: p.text,
+		descriptionForeground: p.muted,
+		errorForeground: p.error,
+		"widget.shadow": dark ? "#00000066" : "#062a5522",
+		"selection.background": p.editorSelectionBg,
+		"textLink.foreground": p.mdLink,
+		"textLink.activeForeground": p.accent,
+		"textCodeBlock.background": p.widgetBg,
+		"textBlockQuote.border": p.mdQuoteBorder,
+
+		"titleBar.activeBackground": p.titleBarBg,
+		"titleBar.activeForeground": p.muted,
+		"titleBar.inactiveBackground": p.titleBarBg,
+		"titleBar.inactiveForeground": p.dim,
+		"titleBar.border": p.titleBarBg,
+
+		"activityBar.background": p.activityBarBg,
+		"activityBar.foreground": p.text,
+		"activityBar.inactiveForeground": p.dim,
+		"activityBar.activeBorder": p.accent,
+		"activityBar.border": p.activityBarBg,
+		"activityBarBadge.background": p.accent,
+		"activityBarBadge.foreground": p.buttonFg,
+
+		"sideBar.background": p.sidebarBg,
+		"sideBar.foreground": p.muted,
+		"sideBar.border": p.sidebarBg,
+		"sideBarTitle.foreground": p.dim,
+		"sideBarSectionHeader.background": p.sidebarBg,
+		"sideBarSectionHeader.foreground": p.text,
+		"sideBarSectionHeader.border": p.borderMuted,
+
+		"list.activeSelectionBackground": p.selectedBg,
+		"list.activeSelectionForeground": p.text,
+		"list.inactiveSelectionBackground": p.selectedBg,
+		"list.inactiveSelectionForeground": p.text,
+		"list.hoverBackground": p.lineHighlightBg,
+		"list.focusOutline": p.accent,
+		"list.highlightForeground": p.accent,
+		"list.errorForeground": p.error,
+		"list.warningForeground": p.warning,
+
+		"editorGroupHeader.tabsBackground": p.tabInactiveBg,
+		"editorGroupHeader.tabsBorder": p.tabInactiveBg,
+		"editorGroup.border": p.borderMuted,
+		"tab.activeBackground": p.editorBg,
+		"tab.activeForeground": p.text,
+		"tab.activeBorderTop": p.accent,
+		"tab.inactiveBackground": p.tabInactiveBg,
+		"tab.inactiveForeground": p.dim,
+		"tab.border": p.tabInactiveBg,
+		"tab.hoverBackground": p.editorBg,
+		"tab.unfocusedActiveForeground": p.muted,
+		"breadcrumb.foreground": p.dim,
+		"breadcrumb.focusForeground": p.text,
+
+		"editor.background": p.editorBg,
+		"editor.foreground": p.text,
+		"editorLineNumber.foreground": p.lineNumberFg,
+		"editorLineNumber.activeForeground": p.lineNumberActiveFg,
+		"editorCursor.foreground": p.cursorFg,
+		"editor.selectionBackground": p.editorSelectionBg,
+		"editor.inactiveSelectionBackground": alpha(p.editorSelectionBg, "99"),
+		"editor.selectionHighlightBackground": alpha(p.editorSelectionBg, "88"),
+		"editor.wordHighlightBackground": alpha(p.editorSelectionBg, "88"),
+		"editor.lineHighlightBackground": p.lineHighlightBg,
+		"editor.lineHighlightBorder": p.lineHighlightBg,
+		"editor.findMatchBackground": p.findMatchBg,
+		"editor.findMatchBorder": p.success,
+		"editor.findMatchHighlightBackground": alpha(p.findMatchBg, "aa"),
+		"editorIndentGuide.background1": p.indentGuideFg,
+		"editorIndentGuide.activeBackground1": p.border,
+		"editorWhitespace.foreground": p.indentGuideFg,
+		"editorRuler.foreground": p.indentGuideFg,
+		"editorBracketMatch.border": p.accent,
+		"editorBracketMatch.background": alpha(p.editorSelectionBg, "88"),
+		"editorBracketHighlight.foreground1": p.syntaxNumber,
+		"editorBracketHighlight.foreground2": p.syntaxKeyword,
+		"editorBracketHighlight.foreground3": p.syntaxFunction,
+		"editorError.foreground": p.error,
+		"editorWarning.foreground": p.warning,
+		"editorInfo.foreground": p.accent,
+		"editorLink.activeForeground": p.mdLink,
+		"editorGutter.addedBackground": p.success,
+		"editorGutter.modifiedBackground": p.warning,
+		"editorGutter.deletedBackground": p.error,
+		"editorOverviewRuler.border": p.editorBg,
+
+		"editorWidget.background": p.widgetBg,
+		"editorWidget.border": p.borderMuted,
+		"editorHoverWidget.background": p.widgetBg,
+		"editorHoverWidget.border": p.borderMuted,
+		"editorSuggestWidget.background": p.widgetBg,
+		"editorSuggestWidget.border": p.borderMuted,
+		"editorSuggestWidget.selectedBackground": p.selectedBg,
+		"editorSuggestWidget.highlightForeground": p.accent,
+		"quickInput.background": p.widgetBg,
+		"pickerGroup.foreground": p.accent,
+		"menu.background": p.widgetBg,
+		"menu.foreground": p.text,
+		"menu.selectionBackground": p.selectedBg,
+		"notifications.background": p.widgetBg,
+
+		"input.background": p.inputBg,
+		"input.foreground": p.text,
+		"input.border": p.borderMuted,
+		"input.placeholderForeground": p.dim,
+		"inputOption.activeBorder": p.accent,
+		"dropdown.background": p.inputBg,
+		"dropdown.border": p.borderMuted,
+		"button.background": p.accent,
+		"button.foreground": p.buttonFg,
+		"button.hoverBackground": p.borderAccent,
+		"button.secondaryBackground": p.selectedBg,
+		"button.secondaryForeground": p.text,
+		"badge.background": p.accent,
+		"badge.foreground": p.buttonFg,
+		"progressBar.background": p.accent,
+		"scrollbarSlider.background": alpha(p.border, "55"),
+		"scrollbarSlider.hoverBackground": alpha(p.border, "88"),
+		"scrollbarSlider.activeBackground": alpha(p.border, "aa"),
+
+		"panel.background": p.editorBg,
+		"panel.border": p.borderMuted,
+		"panelTitle.activeForeground": p.text,
+		"panelTitle.activeBorder": p.accent,
+		"panelTitle.inactiveForeground": p.dim,
+
+		"statusBar.background": p.statusBarBg,
+		"statusBar.foreground": p.statusBarFg,
+		"statusBar.border": p.statusBarBg,
+		"statusBar.noFolderBackground": p.statusBarBg,
+		"statusBar.debuggingBackground": p.warning,
+		"statusBar.debuggingForeground": p.buttonFg,
+		"statusBarItem.remoteBackground": p.accent,
+		"statusBarItem.remoteForeground": p.buttonFg,
+
+		"gitDecoration.addedResourceForeground": p.toolDiffAdded,
+		"gitDecoration.untrackedResourceForeground": p.toolDiffAdded,
+		"gitDecoration.modifiedResourceForeground": p.warning,
+		"gitDecoration.deletedResourceForeground": p.toolDiffRemoved,
+		"gitDecoration.conflictingResourceForeground": p.error,
+		"gitDecoration.ignoredResourceForeground": p.dim,
+		"diffEditor.insertedTextBackground": alpha(p.toolDiffAdded, "26"),
+		"diffEditor.removedTextBackground": alpha(p.toolDiffRemoved, "26"),
+
+		"terminal.background": p.editorBg,
+		"terminal.foreground": p.text,
+		"terminalCursor.foreground": p.cursorFg,
+		"terminal.selectionBackground": p.editorSelectionBg,
+		...Object.fromEntries(["Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"].flatMap((n) => [
+			[`terminal.ansi${n}`, p[`ansi${n}`]],
+			[`terminal.ansiBright${n}`, p[`ansiBright${n}`]],
+		])),
+	};
+}
+
+// TextMate scopes. The same roles as the palette page's VS Code preview.
+function tokens(p) {
+	const t = (scope, foreground, fontStyle) => ({ scope, settings: fontStyle ? { foreground, fontStyle } : { foreground } });
+	return [
+		t(["comment", "punctuation.definition.comment"], p.syntaxComment, "italic"),
+		t(["keyword", "keyword.control", "keyword.operator.new", "keyword.operator.expression", "keyword.operator.logical.python"], p.syntaxKeyword),
+		t(["storage", "storage.type", "storage.modifier", "keyword.declaration"], p.syntaxStorage),
+		t(["keyword.operator", "keyword.operator.assignment", "keyword.operator.arithmetic", "keyword.operator.comparison"], p.syntaxOperator),
+		t(["punctuation", "meta.brace", "punctuation.definition.template-expression"], p.syntaxPunctuation),
+		t(["string", "punctuation.definition.string"], p.syntaxString),
+		t(["constant.character.escape", "constant.other.placeholder"], p.syntaxEscape),
+		t(["string.regexp"], p.syntaxRegex),
+		t(["constant.numeric"], p.syntaxNumber),
+		t(["constant.language", "variable.other.constant", "variable.other.enummember", "support.constant"], p.syntaxConstant),
+		t(["entity.name.function", "support.function", "meta.function-call entity.name.function"], p.syntaxFunction),
+		t(["entity.name.type", "entity.name.class", "support.type", "support.class", "entity.other.inherited-class"], p.syntaxType),
+		t(["variable", "variable.other.readwrite", "meta.definition.variable"], p.syntaxVariable),
+		t(["variable.parameter", "meta.parameters variable"], p.syntaxParameter),
+		t(["variable.other.property", "variable.other.object.property", "support.type.property-name", "meta.object-literal.key", "entity.name.tag.yaml"], p.syntaxProperty),
+		t(["variable.language.this", "variable.language.self", "variable.language.super"], p.syntaxThis, "italic"),
+		t(["meta.decorator", "entity.name.function.decorator", "punctuation.decorator"], p.syntaxDecorator),
+		t(["entity.name.namespace", "entity.name.module", "entity.name.type.module"], p.syntaxNamespace),
+		t(["entity.name.tag", "support.class.component"], p.syntaxTag),
+		t(["entity.other.attribute-name"], p.syntaxAttribute),
+		t(["invalid"], p.error),
+
+		t(["markup.heading", "entity.name.section"], p.mdHeading, "bold"),
+		t(["markup.bold"], p.text, "bold"),
+		t(["markup.italic"], p.text, "italic"),
+		t(["markup.underline.link"], p.mdLinkUrl),
+		t(["string.other.link", "markup.link"], p.mdLink),
+		t(["markup.inline.raw", "markup.raw"], p.mdCode),
+		t(["markup.fenced_code.block.markdown punctuation.definition"], p.mdCodeBlockBorder),
+		t(["markup.quote"], p.mdQuote, "italic"),
+		t(["punctuation.definition.list", "markup.list punctuation"], p.mdListBullet),
+		t(["markup.inserted"], p.toolDiffAdded),
+		t(["markup.deleted"], p.toolDiffRemoved),
+		t(["markup.changed"], p.warning),
+	];
+}
+
+function semantic(p) {
+	return {
+		namespace: p.syntaxNamespace,
+		"class": p.syntaxType,
+		"interface": p.syntaxType,
+		"enum": p.syntaxType,
+		type: p.syntaxType,
+		typeParameter: p.syntaxType,
+		function: p.syntaxFunction,
+		method: p.syntaxFunction,
+		parameter: p.syntaxParameter,
+		property: p.syntaxProperty,
+		variable: p.syntaxVariable,
+		enumMember: p.syntaxConstant,
+		decorator: p.syntaxDecorator,
+		"variable.defaultLibrary": p.syntaxType,
+	};
+}
+
+for (const [mode, name] of [["dark", "Delφ Dark"], ["light", "Delφ Light"]]) {
+	const p = palette[mode], dark = mode === "dark";
+	const theme = { $schema: "vscode://schemas/color-theme", name, type: mode, semanticHighlighting: true, colors: workbench(p, dark), tokenColors: tokens(p), semanticTokenColors: semantic(p) };
+	const values = [...Object.values(theme.colors), ...theme.tokenColors.map((x) => x.settings.foreground), ...Object.values(theme.semanticTokenColors)];
+	if (!values.every((v) => /^#[0-9a-f]{6}([0-9a-f]{2})?$/.test(v))) throw new Error(`${mode}: a palette key is missing or not a hex color`);
+	writeFileSync(new URL(`./themes/delphi-${mode}.json`, import.meta.url), JSON.stringify(theme, null, "\t") + "\n");
+	console.log(`themes/delphi-${mode}.json`);
+}
