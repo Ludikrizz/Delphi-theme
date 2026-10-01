@@ -1,6 +1,6 @@
 // Builds themes/delphi-dark.json and themes/delphi-light.json from palette.json.
 // palette.json is the "Copy all colors as JSON" export of the Indigo Swatchbook page: { dark: {...}, light: {...} }.
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const palette = JSON.parse(readFileSync(new URL("./palette.json", import.meta.url), "utf8"));
 const alpha = (hex, a) => hex + a; // "#rrggbb" + "aa"
@@ -225,6 +225,158 @@ function semantic(p) {
 	};
 }
 
+// Zed theme style, schema https://zed.dev/schema/themes/v0.2.0.json. The same roles as workbench() and tokens().
+function zed(p) {
+	const none = "#00000000";
+	const status = (name, c) => ({ [name]: c, [`${name}.background`]: alpha(c, "26"), [`${name}.border`]: c });
+	const s = (color, extra) => ({ color, ...extra });
+	const italic = { font_style: "italic" }, bold = { font_weight: 700 };
+	return {
+		background: p.titleBarBg,
+		border: p.borderMuted,
+		"border.variant": p.borderMuted,
+		"border.focused": p.accent,
+		"border.selected": p.accent,
+		"border.transparent": none,
+		"border.disabled": p.borderMuted,
+		"elevated_surface.background": p.widgetBg,
+		"surface.background": p.sidebarBg,
+		"drop_target.background": alpha(p.accent, "33"),
+		"element.background": p.inputBg,
+		"element.hover": p.lineHighlightBg,
+		"element.active": p.selectedBg,
+		"element.selected": p.selectedBg,
+		"element.disabled": p.inputBg,
+		"ghost_element.background": none,
+		"ghost_element.hover": p.lineHighlightBg,
+		"ghost_element.active": p.selectedBg,
+		"ghost_element.selected": p.selectedBg,
+		"ghost_element.disabled": none,
+		text: p.text,
+		"text.muted": p.muted,
+		"text.placeholder": p.dim,
+		"text.disabled": p.dim,
+		"text.accent": p.accent,
+		icon: p.text,
+		"icon.muted": p.muted,
+		"icon.disabled": p.dim,
+		"icon.placeholder": p.dim,
+		"icon.accent": p.accent,
+		// ponytail: Zed draws status bar text in p.text, so the light navy statusBarBg would hide it.
+		"status_bar.background": p.sidebarBg,
+		"title_bar.background": p.titleBarBg,
+		"title_bar.inactive_background": p.titleBarBg,
+		"toolbar.background": p.editorBg,
+		"tab_bar.background": p.tabInactiveBg,
+		"tab.inactive_background": p.tabInactiveBg,
+		"tab.active_background": p.editorBg,
+		"search.match_background": p.findMatchBg,
+		"panel.background": p.sidebarBg,
+		"panel.focused_border": p.accent,
+		"panel.indent_guide": p.indentGuideFg,
+		"panel.indent_guide_active": p.border,
+		"panel.indent_guide_hover": p.border,
+		"pane_group.border": p.borderMuted,
+		"scrollbar.thumb.background": alpha(p.border, "55"),
+		"scrollbar.thumb.hover_background": alpha(p.border, "88"),
+		"scrollbar.thumb.border": none,
+		"scrollbar.track.background": none,
+		"scrollbar.track.border": none,
+		"editor.foreground": p.text,
+		"editor.background": p.editorBg,
+		"editor.gutter.background": p.editorBg,
+		"editor.subheader.background": p.sidebarBg,
+		"editor.active_line.background": p.lineHighlightBg,
+		"editor.highlighted_line.background": p.lineHighlightBg,
+		"editor.line_number": p.lineNumberFg,
+		"editor.active_line_number": p.lineNumberActiveFg,
+		"editor.invisible": p.indentGuideFg,
+		"editor.wrap_guide": p.indentGuideFg,
+		"editor.active_wrap_guide": p.border,
+		"editor.indent_guide": p.indentGuideFg,
+		"editor.indent_guide_active": p.border,
+		"editor.document_highlight.read_background": alpha(p.editorSelectionBg, "88"),
+		"editor.document_highlight.write_background": alpha(p.editorSelectionBg, "88"),
+		"editor.document_highlight.bracket_background": alpha(p.editorSelectionBg, "88"),
+		"link_text.hover": p.mdLink,
+		"terminal.background": p.editorBg,
+		"terminal.ansi.background": p.editorBg,
+		"terminal.foreground": p.text,
+		"terminal.bright_foreground": p.ansiBrightWhite,
+		"terminal.dim_foreground": p.dim,
+		...Object.fromEntries(["Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"].flatMap((n) => [
+			[`terminal.ansi.${n.toLowerCase()}`, p[`ansi${n}`]],
+			[`terminal.ansi.bright_${n.toLowerCase()}`, p[`ansiBright${n}`]],
+		])),
+		...status("conflict", p.error),
+		...status("created", p.toolDiffAdded),
+		...status("deleted", p.toolDiffRemoved),
+		...status("modified", p.warning),
+		...status("renamed", p.accent),
+		...status("error", p.error),
+		...status("warning", p.warning),
+		...status("success", p.success),
+		...status("info", p.accent),
+		...status("hint", p.dim),
+		...status("hidden", p.dim),
+		...status("ignored", p.dim),
+		...status("predictive", p.dim),
+		...status("unreachable", p.dim),
+		// Newer Zed reads git colors from version_control.*, older Zed from created/modified/deleted above.
+		"version_control.added": p.toolDiffAdded,
+		"version_control.modified": p.warning,
+		"version_control.deleted": p.toolDiffRemoved,
+		"version_control.renamed": p.accent,
+		"version_control.conflict": p.error,
+		"version_control.ignored": p.dim,
+		players: [{ cursor: p.cursorFg, background: p.accent, selection: p.editorSelectionBg }],
+		accents: [p.syntaxNumber, p.syntaxKeyword, p.syntaxFunction],
+		// Tree-sitter captures. Zed falls back to the longest matching prefix, so "variable.parameter" beats "variable".
+		syntax: {
+			attribute: s(p.syntaxAttribute),
+			boolean: s(p.syntaxConstant),
+			comment: s(p.syntaxComment, italic),
+			"comment.doc": s(p.syntaxComment, italic),
+			constant: s(p.syntaxConstant),
+			constructor: s(p.syntaxType),
+			embedded: s(p.text),
+			emphasis: s(p.text, italic),
+			"emphasis.strong": s(p.text, bold),
+			enum: s(p.syntaxType),
+			function: s(p.syntaxFunction),
+			hint: s(p.dim),
+			keyword: s(p.syntaxKeyword),
+			label: s(p.syntaxConstant),
+			link_text: s(p.mdLink),
+			link_uri: s(p.mdLinkUrl),
+			namespace: s(p.syntaxNamespace),
+			number: s(p.syntaxNumber),
+			operator: s(p.syntaxOperator),
+			predictive: s(p.dim, italic),
+			preproc: s(p.syntaxKeyword),
+			primary: s(p.text),
+			property: s(p.syntaxProperty),
+			punctuation: s(p.syntaxPunctuation),
+			"punctuation.list_marker": s(p.mdListBullet),
+			"punctuation.special": s(p.syntaxEscape),
+			string: s(p.syntaxString),
+			"string.escape": s(p.syntaxEscape),
+			"string.regex": s(p.syntaxRegex),
+			"string.special": s(p.syntaxEscape),
+			"string.special.symbol": s(p.syntaxConstant),
+			tag: s(p.syntaxTag),
+			"text.literal": s(p.mdCode),
+			title: s(p.mdHeading, bold),
+			type: s(p.syntaxType),
+			variable: s(p.syntaxVariable),
+			"variable.parameter": s(p.syntaxParameter),
+			"variable.special": s(p.syntaxThis, italic),
+			variant: s(p.syntaxConstant),
+		},
+	};
+}
+
+const zedThemes = [];
 for (const [mode, name] of [["dark", "Delφ Dark"], ["light", "Delφ Light"]]) {
 	const p = palette[mode], dark = mode === "dark";
 	const theme = { $schema: "vscode://schemas/color-theme", name, type: mode, semanticHighlighting: true, colors: workbench(p, dark), tokenColors: tokens(p), semanticTokenColors: semantic(p) };
@@ -232,4 +384,14 @@ for (const [mode, name] of [["dark", "Delφ Dark"], ["light", "Delφ Light"]]) {
 	if (!values.every((v) => /^#[0-9a-f]{6}([0-9a-f]{2})?$/.test(v))) throw new Error(`${mode}: a palette key is missing or not a hex color`);
 	writeFileSync(new URL(`./themes/delphi-${mode}.json`, import.meta.url), JSON.stringify(theme, null, "\t") + "\n");
 	console.log(`themes/delphi-${mode}.json`);
+
+	const style = zed(p);
+	JSON.stringify(style, (k, v) => {
+		if (v === undefined || (typeof v === "string" && !/^#[0-9a-f]{6}([0-9a-f]{2})?$/.test(v) && !["italic"].includes(v))) throw new Error(`zed ${mode}: ${k} is missing or not a hex color`);
+		return v;
+	});
+	zedThemes.push({ name, appearance: mode, style });
 }
+mkdirSync(new URL("./zed/", import.meta.url), { recursive: true });
+writeFileSync(new URL("./zed/delphi.json", import.meta.url), JSON.stringify({ $schema: "https://zed.dev/schema/themes/v0.2.0.json", name: "Delφ", author: "Ludikrizz", themes: zedThemes }, null, "\t") + "\n");
+console.log("zed/delphi.json");
