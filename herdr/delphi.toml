@@ -1,0 +1,46 @@
+# Delφ theme for Herdr. Append to config.toml (Windows %APPDATA%\herdr\, Linux ~/.config/herdr/).
+# Herdr accepts only built-in theme names, so no name is set. [theme.custom] sets every token.
+[theme]
+auto_switch = true
+
+[theme.custom]
+accent = "#7ec2fa"
+panel_bg = "#0d2546"
+sidebar_bg = "#0d2546"
+active_row_bg = "#1c4170"
+selection_bg = "#2a507d"
+surface0 = "#2a507d"
+surface1 = "#305b8f"
+surface_dim = "#1c4170"
+overlay0 = "#8a99aa"
+overlay1 = "#a6b0bf"
+subtext0 = "#c9d3df"
+text = "#eef1f6"
+mauve = "#c1a9ee"
+green = "#4cd988"
+yellow = "#f5a742"
+red = "#ff5071"
+blue = "#86c5fa"
+teal = "#84d5cf"
+peach = "#ff9e64"
+
+[theme.custom.light]
+accent = "#0f69a4"
+panel_bg = "#f1f5f9"
+sidebar_bg = "#f1f5f9"
+active_row_bg = "#edf3fb"
+selection_bg = "#cee2fa"
+surface0 = "#cee2fa"
+surface1 = "#a7bfdd"
+surface_dim = "#edf3fb"
+overlay0 = "#647281"
+overlay1 = "#505b6c"
+subtext0 = "#4b5767"
+text = "#062a55"
+mauve = "#725a9a"
+green = "#027540"
+yellow = "#905a02"
+red = "#ca0a47"
+blue = "#2c6a9b"
+teal = "#02726e"
+peach = "#a75902"

@@ -392,6 +392,47 @@ for (const [mode, name] of [["dark", "Delφ Dark"], ["light", "Delφ Light"]]) {
 	});
 	zedThemes.push({ name, appearance: mode, style });
 }
+// Herdr UI tokens (src/app/state.rs Palette). Named hues use the ANSI roles, so Herdr matches the terminal scheme.
+// [theme.custom] is dark, [theme.custom.light] layers on top when the host terminal reports a light appearance.
+const herdr = (p) => ({
+	accent: p.accent,
+	panel_bg: p.sidebarBg,
+	sidebar_bg: p.sidebarBg,
+	active_row_bg: p.lineHighlightBg,
+	selection_bg: p.selectedBg,
+	surface0: p.selectedBg,
+	surface1: p.borderMuted,
+	surface_dim: p.lineHighlightBg,
+	overlay0: p.dim,
+	overlay1: p.muted,
+	subtext0: p.syntaxOperator,
+	text: p.text,
+	mauve: p.ansiMagenta,
+	green: p.ansiGreen,
+	yellow: p.ansiYellow,
+	red: p.ansiRed,
+	blue: p.ansiBlue,
+	teal: p.ansiCyan,
+	peach: p.syntaxParameter,
+});
+const toml = (o) => Object.entries(o).map(([k, v]) => {
+	if (!/^#[0-9a-f]{6}$/.test(v)) throw new Error(`herdr: ${k} is missing or not a hex color`);
+	return `${k} = "${v}"`;
+}).join("\n");
+mkdirSync(new URL("./herdr/", import.meta.url), { recursive: true });
+writeFileSync(new URL("./herdr/delphi.toml", import.meta.url), `# Delφ theme for Herdr. Append to config.toml (Windows %APPDATA%\\herdr\\, Linux ~/.config/herdr/).
+# Herdr accepts only built-in theme names, so no name is set. [theme.custom] sets every token.
+[theme]
+auto_switch = true
+
+[theme.custom]
+${toml(herdr(palette.dark))}
+
+[theme.custom.light]
+${toml(herdr(palette.light))}
+`);
+console.log("herdr/delphi.toml");
+
 mkdirSync(new URL("./zed/", import.meta.url), { recursive: true });
 writeFileSync(new URL("./zed/delphi.json", import.meta.url), JSON.stringify({ $schema: "https://zed.dev/schema/themes/v0.2.0.json", name: "Delφ", author: "Ludikrizz", themes: zedThemes }, null, "\t") + "\n");
 console.log("zed/delphi.json");
