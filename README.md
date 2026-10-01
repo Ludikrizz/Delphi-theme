@@ -34,6 +34,14 @@ To switch with the OS light or dark mode, add this to your `settings.json`:
 "workbench.preferredLightColorTheme": "Delφ Light"
 ```
 
+## Zed
+
+`zed/delphi.json` has both themes for the Zed editor.
+
+1. Copy `zed/delphi.json` to `%APPDATA%\Zed\themes\` (Windows) or `~/.config/zed/themes/` (macOS and Linux).
+2. In Zed, open the theme selector (`Ctrl+K Ctrl+T`).
+3. Select **Delφ Dark** or **Delφ Light**.
+
 ## Palette
 
 The main syntax colors of Delφ Dark:
@@ -61,7 +69,7 @@ The main syntax colors of Delφ Dark:
 To change a color in the themes:
 
 1. Edit `palette.json`. It has a `dark` and a `light` object with the same keys.
-2. Run `npm run build`. This writes `themes/delphi-dark.json` and `themes/delphi-light.json`.
+2. Run `npm run build`. This writes `themes/delphi-dark.json`, `themes/delphi-light.json` and `zed/delphi.json`.
 3. Package and install again (see [Install](#install)).
 
 To change one color only on your machine, use the settings that VS Code has for this:
@@ -80,8 +88,9 @@ To change one color only on your machine, use the settings that VS Code has for 
 | Path | Contents |
 |---|---|
 | `palette.json` | The source colors, exported from the delφ palette page |
-| `build.mjs` | Maps the palette to VS Code window colors, TextMate scopes and semantic tokens |
-| `themes/` | The built theme files (commit them after each build) |
+| `build.mjs` | Maps the palette to VS Code window colors, TextMate scopes and semantic tokens, and to the Zed theme |
+| `themes/` | The built VS Code theme files (commit them after each build) |
+| `zed/` | The built Zed theme file (commit it after each build) |
 | `images/` | README screenshots of VS Code |
 
 ## License
