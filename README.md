@@ -1,4 +1,4 @@
-# Delφ Theme
+# Delφ Color Theme
 
 Indigo blue dark and light color themes for VS Code. The dark theme uses the delφ brand blue `#062a55` as the editor background, and the light theme uses `#f8fafc`. The same palette is used by the delφ terminal UI.
 
@@ -8,17 +8,17 @@ Indigo blue dark and light color themes for VS Code. The dark theme uses the del
 
 ## Install
 
-Install it from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ludikrizz.delphi-theme):
+Install it from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ludikrizz1.delphi-color-theme):
 
 1. Open the Extensions view (`Ctrl+Shift+X`).
-2. Search for **Delφ Theme**.
+2. Search for **Delφ Color Theme**.
 3. Select **Install**.
 
 To install it from the source instead:
 
 1. Clone this repo.
-2. Run `npm run package`. This makes `delphi-theme-0.1.0.vsix`.
-3. Run `code --install-extension delphi-theme-0.1.0.vsix`.
+2. Run `npm run package`. This makes `delphi-color-theme-0.1.0.vsix`.
+3. Run `code --install-extension delphi-color-theme-0.1.0.vsix`.
 
 ## Activate
 

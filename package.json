@@ -1,9 +1,9 @@
 {
-	"name": "delphi-theme",
-	"displayName": "Delφ Theme",
+	"name": "delphi-color-theme",
+	"displayName": "Delφ Color Theme",
 	"description": "Indigo blue dark and light themes for VS Code, from the delφ brand palette.",
 	"version": "0.1.0",
-	"publisher": "ludikrizz",
+	"publisher": "ludikrizz1",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
